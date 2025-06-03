@@ -1,82 +1,174 @@
-# 🏛️ Legisight
+# 🏛️ Legal Decision Insight Extractor
 
-**Legisight** adalah solusi otomatis berbasis *Retrieval-Augmented Generation (RAG)* yang membantu mengidentifikasi keterkaitan dokumen resmi (seperti hasil rapat atau kebijakan) dengan salah satu dari 13 Komisi di DPR RI berdasarkan ruang lingkup tugasnya.
+**Legal Decision Insight Extractor** adalah sebuah proyek pemrosesan dokumen berbasis LLM (Large Language Model) untuk mengolah dokumen putusan hukum dan mengelompokkan substansi masalah ke dalam 13 komisi DPR RI yang relevan.
 
----
-
-## 🚀 Fitur Utama
-
-- 📄 Mendownload & membaca isi dokumen dari link file PDF
-- 🔍 Menerapkan ekstraksi berbasis RAG untuk memahami konteks isi
-- 🧠 Menganalisis isi dokumen menggunakan LLM (Large Language Model)
-- 🏷️ Mengklasifikasikan dokumen ke komisi yang relevan di DPR RI
+> ⚖️ Tujuan utama proyek ini adalah membantu lembaga legislatif dalam mengarsipkan, mengklasifikasikan, dan mengekstrak insight dari putusan hukum berdasarkan konteks permasalahan yang termuat di dalamnya.
 
 ---
 
-## 🛠️ Cara Menjalankan
+## 📌 Fitur Utama
 
-### 1. Instalasi Dependensi
+* ✅ Ekstraksi bagian penting dari dokumen putusan: *Petitum* dan *Amar*
+* ✅ Klasifikasi otomatis berdasarkan status putusan hukum
+* ✅ Penyesuaian prompt LLM berdasarkan konteks hukum
+* ✅ Kompatibel dengan LLM lokal (mis. `GoToCompany/llama3-8b-cpt-sahabatai-v1-instruct`)
+* ✅ Output dalam format `.csv` siap pakai untuk pelaporan
 
-Jalankan perintah berikut di cell notebook untuk memasang semua dependensi yang dibutuhkan:
+---
 
-```bash
-pip install langchain langchain-community faiss-cpu sentence-transformers pypdf
-curl -fsSL https://ollama.com/install.sh | sh
-ollama serve > /dev/null 2>&1 &
-ollama pull deepseek-r1:7b
+## 🧠 Arsitektur Proyek
+
+```
+[PDF Putusan]
+     ↓
+[Ekstraksi Text (pdfplumber)]
+     ↓
+[Preprocessing & Regex Parsing]
+     ↓
+[Penentuan Status Putusan]
+     ↓
+[Prompt Generation]
+     ↓
+[LLM Classification (local HF model)]
+     ↓
+[Output: Komisi Terkait + Alasan]
 ```
 
-## 📄 2. Unggah File CSV
+---
 
-Unggah file `.csv` yang berisi daftar link dokumen PDF yang akan diproses.
+## 🗂️ Struktur Folder
 
-> 💡 **Catatan Penting:** Pastikan file CSV memiliki **kolom bernama `supporting_file`** yang berisi URL dari file PDF.
-
-### 📊 Contoh isi CSV:
-
-| id | title   | supporting_file                    |
-|----|---------|------------------------------------|
-| 1  | Rapat 1 | https://example.com/file1.pdf      |
-| 2  | Rapat 2 | https://example.com/file2.pdf      |
+```
+.
+├── data/                        # Folder berisi file PDF
+├── utils/
+│   ├── parser.py               # Regex & logic ekstraksi Amar / Petitum
+│   └── prompt_generator.py     # Prompt untuk tiap jenis status
+├── models/
+│   └── classifier.py           # LLM-based classification logic
+├── outputs/
+│   └── hasil_klasifikasi.csv   # Output hasil klasifikasi
+├── classify.py                 # Pipeline utama
+├── README.md                   # Dokumentasi proyek
+└── requirements.txt            # Library dependensi
+```
 
 ---
 
-## ⚙️ Alur Proses
+## 🧪 Cara Menjalankan Proyek
 
-1. ✅ **Unggah CSV**  
-   Sistem membaca link dari kolom `supporting_file`.
+### 1. Clone repository
 
-2. 📥 **Download PDF**  
-   File dari URL diunduh dan diproses.
+```bash
+git clone https://github.com/username/legal-decision-extractor.git
+cd legal-decision-extractor
+```
 
-3. 📚 **Split & Embed**  
-   Dokumen dipecah menjadi chunk dan dibuat embedding-nya.
+### 2. Install dependensi
 
-4. 🔍 **Query dengan RAG**  
-   Sistem menanyakan isi dokumen untuk menentukan relevansi terhadap 13 Komisi DPR RI.
+```bash
+pip install -r requirements.txt
+```
 
-5. 🧠 **LLM Reasoning**  
-   Ollama (dengan model `deepseek-r1:7b`) digunakan untuk menjawab pertanyaan berbasis konteks.
+### 3. Siapkan file PDF putusan
 
-6. 🏷️ **Klasifikasi Komisi**  
-   Output akhir berupa komisi yang relevan dengan isi dokumen.
+Letakkan semua file PDF pada folder `./data`.
 
----
+### 4. Jalankan pipeline klasifikasi
 
-## 🧩 Teknologi yang Digunakan
+```bash
+python classify.py
+```
 
-- **LangChain** – Loader, Chunking, Embedding, Retrieval  
-- **Nomic-embed-text** – Embedding teks  
-- **FAISS** – Semantic search  
-- **Ollama** – Model lokal (Deepseek-R1:7b)  
-- **pypdf** – Ekstraksi teks dari PDF
+### 5. Hasil klasifikasi
 
----
-
-## 📌 Rekomendasi
-
-- dapat menyesuaikan **model**, **prompt**, dan **logic RAG** sesuai kebutuhan .
+File `hasil_klasifikasi.csv` akan muncul di folder `outputs/`.
 
 ---
 
+## ⚙️ Konfigurasi Model
+
+Model default menggunakan LLM lokal berbasis HuggingFace:
+
+* **Model**: `GoToCompany/llama3-8b-cpt-sahabatai-v1-instruct`
+* **Tokenizer**: `AutoTokenizer.from_pretrained(...)`
+* **Device**: GPU (`cuda`) atau CPU
+
+> ⚠️ Pastikan kamu memiliki hardware yang sesuai untuk menjalankan model 8B (RAM & VRAM yang cukup).
+
+---
+
+## 🏛️ Daftar Komisi DPR RI
+
+Model akan mengklasifikasikan dokumen ke dalam salah satu dari 13 komisi berikut:
+
+* Komisi I – Pertahanan, Luar Negeri, Kominfo
+* Komisi II – Pemerintahan, Reformasi Birokrasi
+* Komisi III – Hukum, HAM, Keamanan
+* Komisi IV – Pertanian, Lingkungan Hidup
+* Komisi V – Infrastruktur, Perhubungan
+* Komisi VI – Perdagangan, Perindustrian, BUMN
+* Komisi VII – Energi, Riset, Teknologi
+* Komisi VIII – Agama, Sosial, Pemberdayaan Perempuan
+* Komisi IX – Kesehatan, Ketenagakerjaan
+* Komisi X – Pendidikan, Pariwisata
+* Komisi XI – Keuangan, Perbankan
+
+---
+
+## 🧩 Logika Status Putusan
+
+Pengelompokan status digunakan untuk memilih bagian dokumen yang relevan untuk dianalisis:
+
+| Kelompok Status         | Berdasarkan Bagian |
+| ----------------------- | ------------------ |
+| Dikabulkan, Sela        | Amar               |
+| Ditolak, Tidak Diterima | Petitum            |
+| Gugur, Tidak Berwenang  | Return langsung    |
+| Campuran                | Amar & Petitum     |
+
+---
+
+## 📤 Contoh Output
+
+```csv
+filename, komisi, status_putusan, alasan_model
+001_putusan.pdf, Komisi III, dikabulkan seluruhnya, Berdasarkan pelanggaran hukum acara pidana
+```
+
+---
+
+## 🤖 Model & Prompt Engineering
+
+Prompt disusun untuk:
+
+* Menjelaskan konteks tugas model
+* Menyediakan daftar komisi
+* Menekankan analisis konteks (bukan keyword matching)
+
+Contoh potongan prompt:
+
+```
+Anda adalah seorang ahli hukum yang berpengalaman...
+Tugas Anda adalah mengklasifikasikan sebuah teks putusan pengadilan ke dalam salah satu dari 13 komisi DPR RI...
+```
+
+---
+
+## 👨‍💼 Kontributor
+
+* **Andra** – AI Engineer, Prompt Strategist
+* **Indera** - AI Engineer
+
+---
+
+## 🪪 Lisensi
+
+MIT License. Silakan digunakan dan dikembangkan untuk tujuan riset, edukasi, maupun peningkatan tata kelola lembaga hukum/legislatif.
+
+---
+
+## 📬 Kontak
+
+Jika ingin berdiskusi lebih lanjut tentang proyek ini atau berkolaborasi, silakan hubungi melalui:
 
