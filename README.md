@@ -36,25 +36,6 @@
 
 ---
 
-## 🗂️ Struktur Folder
-
-```
-.
-├── data/                        # Folder berisi file PDF
-├── utils/
-│   ├── parser.py               # Regex & logic ekstraksi Amar / Petitum
-│   └── prompt_generator.py     # Prompt untuk tiap jenis status
-├── models/
-│   └── classifier.py           # LLM-based classification logic
-├── outputs/
-│   └── hasil_klasifikasi.csv   # Output hasil klasifikasi
-├── classify.py                 # Pipeline utama
-├── README.md                   # Dokumentasi proyek
-└── requirements.txt            # Library dependensi
-```
-
----
-
 ## 🧪 Cara Menjalankan Proyek
 
 ### 1. Clone repository
