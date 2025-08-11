@@ -31,7 +31,7 @@
      ↓
 [LLM Classification (local HF model)]
      ↓
-[Output: Komisi Terkait + Alasan]
+[Output: Komisi Terkait + Bidang Koordinator]
 ```
 
 ---
@@ -41,29 +41,18 @@
 ### 1. Clone repository
 
 ```bash
-git clone https://github.com/username/legal-decision-extractor.git
-cd legal-decision-extractor
+git clone https://github.com/andradhf/Legisight.git
+cd Legislight
 ```
 
-### 2. Install dependensi
+### 2. Open in Jupyter/Colab
 
-```bash
-pip install -r requirements.txt
-```
+-Buka melalui visual studio code untuk menggunakan jupyter notebook
+-Upload ke notebook ke google colab untuk menggunakan colab
 
-### 3. Siapkan file PDF putusan
+### 3. Run
 
-Letakkan semua file PDF pada folder `./data`.
-
-### 4. Jalankan pipeline klasifikasi
-
-```bash
-python classify.py
-```
-
-### 5. Hasil klasifikasi
-
-File `hasil_klasifikasi.csv` akan muncul di folder `outputs/`.
+Run all cell
 
 ---
 
@@ -113,8 +102,8 @@ Pengelompokan status digunakan untuk memilih bagian dokumen yang relevan untuk d
 ## 📤 Contoh Output
 
 ```csv
-filename, komisi, status_putusan, alasan_model
-001_putusan.pdf, Komisi III, dikabulkan seluruhnya, Berdasarkan pelanggaran hukum acara pidana
+komisi, bidang koordinator
+Komisi III, Polkam
 ```
 
 ---
@@ -145,11 +134,11 @@ Tugas Anda adalah mengklasifikasikan sebuah teks putusan pengadilan ke dalam sal
 
 ## 🪪 Lisensi
 
-MIT License. Silakan digunakan dan dikembangkan untuk tujuan riset, edukasi, maupun peningkatan tata kelola lembaga hukum/legislatif.
 
 ---
 
 ## 📬 Kontak
 
 Jika ingin berdiskusi lebih lanjut tentang proyek ini atau berkolaborasi, silakan hubungi melalui:
+dhafa71110@gmail.com
 
