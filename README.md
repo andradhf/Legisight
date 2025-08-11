@@ -47,12 +47,12 @@ cd Legislight
 
 ### 2. Open in Jupyter/Colab
 
--Buka melalui visual studio code untuk menggunakan jupyter notebook
--Upload ke notebook ke google colab untuk menggunakan colab
+* Buka melalui visual studio code untuk menggunakan jupyter notebook
+* Upload notebook ke google colab untuk menggunakan colab
 
 ### 3. Run
 
-Run all cell
+* Run all cell
 
 ---
 
